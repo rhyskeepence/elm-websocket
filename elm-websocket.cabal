@@ -33,11 +33,19 @@ test-suite elm-websocket-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       Common
   build-depends:       base
+                     , aeson
+                     , concurrent-extra
                      , elm-websocket
                      , hspec
+                     , http-types
+                     , mtl
+                     , network
                      , text
+                     , wai
+                     , websockets
+                     , warp
+
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
   default-language:    Haskell2010
 
