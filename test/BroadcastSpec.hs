@@ -6,19 +6,16 @@ module BroadcastSpec where
 import           Elm.WebSocket
 import           Test.Hspec
 
-import           Control.Concurrent           (forkIO)
+import           Control.Concurrent (forkIO)
 import qualified Control.Concurrent.Broadcast as B
-import           Control.Exception            (bracket)
+import qualified Control.Concurrent.Event     as E
 import           Control.Monad                (forever)
-import           Control.Monad.Trans          (liftIO)
 import           Data.Aeson                   (ToJSON)
-import           Data.Text                    (Text)
-import qualified Data.Text.IO                 as T
+import           Data.Text (Text)
 import           GHC.Generics                 (Generic)
 import           Network.HTTP.Types
-import           Network.Socket               (withSocketsDo)
 import           Network.Wai
-import           Network.Wai.Handler.Warp     (run)
+import           Network.Wai.Handler.Warp     (testWithApplication)
 import qualified Network.WebSockets           as WS
 
 newtype Message = Message
@@ -35,31 +32,32 @@ spec :: Spec
 spec = broadcastSpec
 
 broadcastSpec :: Spec
-broadcastSpec =
-  around runWithClientServer $
-  do describe "Broadcaster" $
-       do it "should broadcast a message to connected clients" $
-            \(clients, messages) -> do broadcast clients $ Message "broadcast"
+broadcastSpec = around runWithClientServer $
+  describe "Broadcaster" $
+    it "should broadcast a message to connected clients" $ \(clients, messages) -> do
+      _ <- broadcast clients $ Message "broadcast"
+      message <- B.listenTimeout messages 100000
+      message `shouldBe` Just "{\"hello\":\"broadcast\"}"
 
-runWithClientServer :: (TestState -> IO ()) -> IO ()
-runWithClientServer = bracket setupClientServer tearDownClientServer
 
-setupClientServer :: IO TestState
-setupClientServer = do
+runWithClientServer :: (TestState -> IO a) -> IO a
+runWithClientServer action = do
   clients <- newConnectedClientsState
-  messagesReceived <- B.new
-  _ <- forkIO $ run 10000 $ withWebSocketBroadcaster clients app
-  _ <- withSocketsDo $ WS.runClient "localhost" 10000 "/" clientReceiver
-  return (clients, messagesReceived)
+  messages <- B.new
+  isConnected <- E.new
+
+  testWithApplication (return $ withWebSocketBroadcaster clients httpApplication) $ \port -> do
+      _ <- forkIO $ WS.runClient "localhost" port "" $ clientReceiver messages isConnected
+      E.wait isConnected
+      action (clients, messages)
+
   where
-    clientReceiver connection =
-      forkIO $
-      forever $
-      do msg <- WS.receiveData connection
-         liftIO $ T.putStrLn msg
 
-app :: Application
-app req f = f $ responseLBS status200 [(hContentType, "text/plain")] "Hello world!"
+    clientReceiver :: ReceivedMessage -> E.Event -> WS.Connection -> IO ()
+    clientReceiver receivedMessageBroadcast isConnected connection = do
+      E.set isConnected
+      _ <- forever $ WS.receiveData connection >>= B.broadcast receivedMessageBroadcast
+      return ()
 
-tearDownClientServer :: TestState -> IO ()
-tearDownClientServer _ = return ()
+    httpApplication :: Application
+    httpApplication _ respond = respond $ responseLBS Network.HTTP.Types.status400 [] "Not a WebSocket request"
