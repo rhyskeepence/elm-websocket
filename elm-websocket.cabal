@@ -17,8 +17,9 @@ library
   exposed-modules:     Elm.WebSocket
   build-depends:       base >= 4.7 && < 5
                      , aeson
+                     , bytestring
+                     , concurrent-extra
                      , lens
-                     , safe
                      , text
                      , wai
                      , wai-websockets

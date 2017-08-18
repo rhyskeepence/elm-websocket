@@ -26,7 +26,7 @@ instance ToJSON Message
 
 type ReceivedMessage = B.Broadcast Text
 
-type TestState = (ConnectedClientsState, ReceivedMessage)
+type TestState = (Broadcaster, ReceivedMessage)
 
 spec :: Spec
 spec = broadcastSpec
@@ -34,22 +34,22 @@ spec = broadcastSpec
 broadcastSpec :: Spec
 broadcastSpec = around runWithClientServer $
   describe "Broadcaster" $
-    it "should broadcast a message to connected clients" $ \(clients, messages) -> do
-      _ <- broadcast clients $ Message "broadcast"
+    it "should broadcast a message to connected clients" $ \(broadcaster, messages) -> do
+      _ <- broadcast broadcaster $ Message "broadcast"
       message <- B.listenTimeout messages 100000
       message `shouldBe` Just "{\"hello\":\"broadcast\"}"
 
 
 runWithClientServer :: (TestState -> IO a) -> IO a
 runWithClientServer action = do
-  clients <- newConnectedClientsState
+  broadcaster <- newBroadcaster
   messages <- B.new
   isConnected <- E.new
 
-  testWithApplication (return $ withWebSocketBroadcaster clients httpApplication) $ \port -> do
+  testWithApplication (return $ withWebSocketBroadcaster broadcaster httpApplication) $ \port -> do
       _ <- forkIO $ WS.runClient "localhost" port "" $ clientReceiver messages isConnected
       E.wait isConnected
-      action (clients, messages)
+      action (broadcaster, messages)
 
   where
 

@@ -1,12 +1,6 @@
 module Elm.WebSocket.Types where
 
-import           Control.Concurrent
-import qualified Network.WebSockets as WS
+import           Control.Concurrent.Broadcast   (Broadcast)
+import           Data.ByteString.Lazy
 
-type ClientId = Int
-
-type Client = (ClientId, WS.Connection)
-
-type ConnectedClients = [Client]
-
-type ConnectedClientsState = MVar [Client]
+type Broadcaster = Broadcast ByteString

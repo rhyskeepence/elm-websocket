@@ -1,60 +1,52 @@
 module Elm.WebSocket.Server
   ( withWebSocketBroadcaster
-  , newConnectedClientsState
+  , newBroadcaster
   , broadcast
   ) where
 
 import           Elm.WebSocket.Types
 
 import           Control.Concurrent
-import qualified Control.Exception              as E
-import qualified Control.Monad                  as Monad
+import qualified Control.Concurrent.Broadcast   as Broadcast (new, listen, broadcast)
+import Control.Monad                 (forever)
 import           Data.Aeson                     (ToJSON, encode)
-import qualified Data.List                      as List
-import qualified Data.Maybe                     as Maybe
-import qualified Data.Text                      as Text
+
 import qualified Network.Wai                    as Wai
 import qualified Network.Wai.Handler.WebSockets as WS
 import qualified Network.WebSockets             as WS
-import qualified Safe
 
-connectClient :: WS.Connection -> ConnectedClientsState -> IO ClientId
-connectClient connection clientsRef =
-  modifyMVar clientsRef $ \clients -> do
-    let clientId = nextId clients
-    return ((clientId, connection) : clients, clientId)
 
-disconnectClient :: ClientId -> ConnectedClientsState -> IO ()
-disconnectClient clientId clientsRef = modifyMVar_ clientsRef $ \clients -> return $ withoutClient clientId clients
+webSocketApp :: Broadcaster -> WS.ServerApp
+webSocketApp incomingBroadcasts pendingConnection = do
+  connection <- WS.acceptRequest pendingConnection
+  WS.forkPingThread connection 30
+  forkBroadcastThread connection incomingBroadcasts
 
-nextId :: ConnectedClients -> ClientId
-nextId = Maybe.maybe 0 (1 +) . Safe.maximumMay . List.map fst
+  let loop = do
+      WS.Text message <- WS.receiveDataMessage connection
+      print message
+      loop
+  loop
 
-withoutClient :: ClientId -> ConnectedClients -> ConnectedClients
-withoutClient clientId = List.filter ((/=) clientId . fst)
 
-listen_ :: WS.Connection -> IO ()
-listen_ connection = do
-  _ <- listen connection :: IO Text.Text
+forkBroadcastThread :: WS.Connection -> Broadcaster -> IO ()
+forkBroadcastThread connection incomingBroadcasts = do
+  _ <- forkIO $ forever $ do
+    message <- Broadcast.listen incomingBroadcasts
+    WS.sendTextData connection message
   return ()
 
-listen :: WS.Connection -> IO a
-listen connection = Monad.forever $ WS.receiveDataMessage connection
 
-wsApp :: ConnectedClientsState -> WS.ServerApp
-wsApp connectedClients pendingConnection = do
-  connection <- WS.acceptRequest pendingConnection
-  clientId <- connectClient connection connectedClients
-  WS.forkPingThread connection 30
-  E.finally (listen_ connection) (disconnectClient clientId connectedClients)
+withWebSocketBroadcaster :: Broadcaster -> Wai.Application -> Wai.Application
+withWebSocketBroadcaster connectedClients =
+  WS.websocketsOr WS.defaultConnectionOptions $ webSocketApp connectedClients
 
-withWebSocketBroadcaster :: ConnectedClientsState -> Wai.Application -> Wai.Application
-withWebSocketBroadcaster connectedClients = WS.websocketsOr WS.defaultConnectionOptions $ wsApp connectedClients
 
-newConnectedClientsState :: IO ConnectedClientsState
-newConnectedClientsState = newMVar []
+newBroadcaster :: IO Broadcaster
+newBroadcaster =
+  Broadcast.new
 
-broadcast :: ToJSON a => ConnectedClientsState -> a -> IO ()
-broadcast connectedClients message = do
-  clients <- readMVar connectedClients
-  Monad.forM_ clients $ \(_, connection) -> WS.sendTextData connection $ encode message
+
+broadcast :: ToJSON a => Broadcaster -> a -> IO ()
+broadcast broadcaster message =
+  Broadcast.broadcast broadcaster $ encode message
