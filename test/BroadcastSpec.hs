@@ -10,7 +10,7 @@ import           Control.Concurrent (forkIO)
 import qualified Control.Concurrent.Broadcast as B
 import qualified Control.Concurrent.Event     as E
 import           Control.Monad                (forever)
-import           Data.Aeson                   (ToJSON)
+import           Data.Aeson                   (ToJSON, FromJSON)
 import           Data.Text (Text)
 import           GHC.Generics                 (Generic)
 import           Network.HTTP.Types
@@ -23,6 +23,7 @@ newtype Message = Message
   } deriving (Eq, Show, Generic)
 
 instance ToJSON Message
+instance FromJSON Message
 
 type ReceivedMessage = B.Broadcast Text
 
@@ -46,7 +47,7 @@ runWithClientServer action = do
   messages <- B.new
   isConnected <- E.new
 
-  testWithApplication (return $ withWebSocketBroadcaster broadcaster httpApplication) $ \port -> do
+  testWithApplication (return $ withWebSocketBroadcaster broadcaster webSocketService httpApplication) $ \port -> do
       _ <- forkIO $ WS.runClient "localhost" port "" $ clientReceiver messages isConnected
       E.wait isConnected
       action (broadcaster, messages)
@@ -58,6 +59,9 @@ runWithClientServer action = do
       E.set isConnected
       _ <- forever $ WS.receiveData connection >>= B.broadcast receivedMessageBroadcast
       return ()
+
+    webSocketService :: WebSocketServer Message Message
+    webSocketService _ = Nothing
 
     httpApplication :: Application
     httpApplication _ respond = respond $ responseLBS Network.HTTP.Types.status400 [] "Not a WebSocket request"
