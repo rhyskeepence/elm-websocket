@@ -9,9 +9,9 @@ import           Elm.WebSocket.Types
 import           Control.Concurrent
 import qualified Control.Concurrent.Broadcast   as Broadcast (broadcast, listen,
                                                               new)
-import Data.Foldable (sequence_)
 import           Control.Monad                  (forever)
 import           Data.Aeson                     (FromJSON, ToJSON, encode, decode)
+import           Data.Foldable                  (traverse_, sequence_)
 
 import qualified Network.Wai                    as Wai
 import qualified Network.Wai.Handler.WebSockets as WS
@@ -25,9 +25,16 @@ webSocketApp incomingBroadcasts server pendingConnection = do
 
   let loop = do
         WS.Text message <- WS.receiveDataMessage connection
-        sequence_ (decode message >>= server)
+        traverse_ (handleRequest connection server) (decode message)
         loop
   loop
+
+
+handleRequest :: FromJSON a => ToJSON b => WS.Connection -> WebSocketServer a b -> a -> IO ()
+handleRequest connection server request = do
+  response <- server request
+  traverse_ (WS.sendTextData connection . encode) response
+  return ()
 
 
 forkBroadcastThread :: WS.Connection -> Broadcaster -> IO ()

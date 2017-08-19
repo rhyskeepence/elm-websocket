@@ -5,4 +5,4 @@ import           Data.ByteString.Lazy
 
 type Broadcaster = Broadcast ByteString
 
-type WebSocketServer a b = a -> Maybe (IO b)
+type WebSocketServer a b = a -> IO (Maybe b)

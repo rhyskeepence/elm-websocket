@@ -37,8 +37,12 @@ broadcastSpec = around runWithClientServer $
   describe "Broadcaster" $
     it "should broadcast a message to connected clients" $ \(broadcaster, messages) -> do
       _ <- broadcast broadcaster $ Message "broadcast"
-      message <- B.listenTimeout messages 100000
+      message <- waitForMessage messages
       message `shouldBe` Just "{\"hello\":\"broadcast\"}"
+
+
+waitForMessage :: ReceivedMessage -> IO (Maybe Text)
+waitForMessage messages = B.listenTimeout messages 100000
 
 
 runWithClientServer :: (TestState -> IO a) -> IO a
@@ -61,7 +65,7 @@ runWithClientServer action = do
       return ()
 
     webSocketService :: WebSocketServer Message Message
-    webSocketService _ = Nothing
+    webSocketService _ = return Nothing
 
     httpApplication :: Application
     httpApplication _ respond = respond $ responseLBS Network.HTTP.Types.status400 [] "Not a WebSocket request"
