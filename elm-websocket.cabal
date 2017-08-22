@@ -15,20 +15,33 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Elm.WebSocket
+                     , Elm.Export
   build-depends:       base >= 4.7 && < 5
                      , aeson
                      , bytestring
                      , concurrent-extra
+                     , containers
+                     , directory
+                     , formatting
                      , lens
+                     , mtl
                      , text
+                     , time
                      , wai
                      , wai-websockets
                      , websockets
+                     , wl-pprint-text
 
   ghc-options:         -Wall
   default-language:    Haskell2010
   other-modules:       Elm.WebSocket.Server
                      , Elm.WebSocket.Types
+                     , Elm.Export.Common
+                     , Elm.Export.Decoder
+                     , Elm.Export.Encoder
+                     , Elm.Export.File
+                     , Elm.Export.Record
+                     , Elm.Export.Type
 
 test-suite elm-websocket-test
   type:                exitcode-stdio-1.0

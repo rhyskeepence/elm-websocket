@@ -11,7 +11,7 @@ import qualified Control.Concurrent.Broadcast   as Broadcast (broadcast, listen,
                                                               new)
 import           Control.Monad                  (forever)
 import           Data.Aeson                     (FromJSON, ToJSON, encode, decode)
-import           Data.Foldable                  (traverse_, sequence_)
+import           Data.Foldable                  (traverse_)
 
 import qualified Network.Wai                    as Wai
 import qualified Network.Wai.Handler.WebSockets as WS
