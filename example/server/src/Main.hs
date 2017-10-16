@@ -1,23 +1,13 @@
-{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
+import Api
 import           Control.Concurrent.Broadcast  as Broadcast
-import           Data.Aeson                    (FromJSON, ToJSON)
 import           Elm.WebSocket                 as WS
-import           GHC.Generics                  (Generic)
 import qualified Network.Wai.Handler.Warp      as Warp
 import           Network.Wai.Middleware.Static
 import           Web.Scotty
-
-newtype Message = SparklineUpdate
-  { newValue :: Int
-  } deriving (Eq, Show, Generic)
-
-instance ToJSON Message
-
-instance FromJSON Message
 
 main :: IO ()
 main = do
