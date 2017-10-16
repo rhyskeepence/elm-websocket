@@ -7,8 +7,6 @@ import           Control.Concurrent.Broadcast  as Broadcast
 import           Data.Aeson                    (FromJSON, ToJSON)
 import           Elm.WebSocket                 as WS
 import           GHC.Generics                  (Generic)
-import           Network.HTTP.Types            (status200)
-import           Network.Wai                   (Application, responseLBS)
 import qualified Network.Wai.Handler.Warp      as Warp
 import           Network.Wai.Middleware.Static
 import           Web.Scotty
