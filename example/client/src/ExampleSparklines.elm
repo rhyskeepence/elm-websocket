@@ -1,4 +1,4 @@
-module SPA exposing (..)
+module ExampleSparklines exposing (..)
 
 import Html exposing (..)
 
