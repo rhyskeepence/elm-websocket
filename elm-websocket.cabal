@@ -42,6 +42,7 @@ library
                      , Elm.Export.File
                      , Elm.Export.Record
                      , Elm.Export.Type
+                     , Elm.Export.WebSocketSubscriber
 
 test-suite elm-websocket-test
   type:                exitcode-stdio-1.0

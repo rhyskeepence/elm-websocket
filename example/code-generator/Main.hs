@@ -8,11 +8,11 @@ import Elm.Export
 
 spec :: Spec
 spec =
-  Spec ["Api"]
-  [ toElmTypeSource    (Proxy :: Proxy Message)
-  , toElmDecoderSource (Proxy :: Proxy Message)
-  , toElmEncoderSource (Proxy :: Proxy Message)
-  ]
+  moduleSpec ["Api"] $ do
+    renderType (Proxy :: Proxy Message)
+    renderEncoder (Proxy :: Proxy Message)
+    renderDecoder (Proxy :: Proxy Message)
+    renderSubscriber
 
 main :: IO ()
 main = specsToDir [spec] "client/src"

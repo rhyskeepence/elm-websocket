@@ -8,3 +8,4 @@ import Elm.Export.Encoder as X
 import Elm.Export.File as X
 import Elm.Export.Record as X
 import Elm.Export.Type as X
+import Elm.Export.WebSocketSubscriber as X
