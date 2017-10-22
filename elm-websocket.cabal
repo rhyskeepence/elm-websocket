@@ -75,6 +75,7 @@ executable elm-websocket-example
                      , elm-websocket
                      , http-types
                      , scotty
+                     , text
                      , wai
                      , wai-middleware-static
                      , warp
@@ -91,6 +92,7 @@ executable elm-websocket-code-generator
                      , elm-websocket
                      , http-types
                      , scotty
+                     , text
                      , wai
                      , wai-middleware-static
                      , warp
