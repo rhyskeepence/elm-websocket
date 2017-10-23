@@ -16,5 +16,6 @@ renderSubscriber = do
   require "Json.Decode exposing (Decoder, decodeString)"
   require "Result exposing (Result(..))"
   collectDeclaration . return $
-    "listen : String -> Decoder a -> (Result String a -> msg) -> Sub msg" <$$> "listen url decoder tagger = " <$$>
-    "    WebSocket.listen url (\\str -> decodeString decoder str |> tagger)"
+    "listen : String -> Decoder a -> (Result String a -> msg) -> Sub msg" <$$>
+    "listen host decoder tagger = " <$$>
+    "    WebSocket.listen (\"ws://\" ++ host) (\\str -> decodeString decoder str |> tagger)"

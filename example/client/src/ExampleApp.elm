@@ -3,6 +3,7 @@ module ExampleApp exposing (..)
 import Model exposing (..)
 import State exposing (..)
 import View exposing (..)
+import Api
 import Navigation
 
 main =
@@ -16,4 +17,4 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Api.listen model.host Api.decodeMessage Receive

@@ -1,11 +1,15 @@
 module Model exposing (..)
 
 
+import Api
 import Navigation
 
+
 type alias Model =
-    { host : String }
+    { host : String
+    , allTasks : List Api.Task }
 
 
 type Msg
-    = UrlChange Navigation.Location
+    = Receive (Result String Api.Message)
+    | UrlChange Navigation.Location
