@@ -10,6 +10,17 @@ TODO: Hackage
 
 ## Usage
 
+## Example application
+
+An example 'Task Management' application is included in this repository under the example directory. It can be built and run using the following command
+
+```
+$ make run-example
+```
+
+This will build the haskell websockets application, as well as the Elm client, and serve it at [localhost:8080](http://localhost:8080).
+
+
 ## Development
 
 ```
