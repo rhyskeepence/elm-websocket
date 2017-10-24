@@ -7,15 +7,15 @@ import Navigation
 
 init : Navigation.Location -> ( Model, Cmd Msg )
 init location =
-    ( initialModel location, initialCommand )
+    ( initialModel location, initialCommand location )
 
 
 initialModel : Navigation.Location -> Model
 initialModel location = Model location.host []
 
 
-initialCommand : Cmd Msg
-initialCommand = Cmd.none
+initialCommand : Navigation.Location -> Cmd Msg
+initialCommand location = Api.send location.host Api.encodeMessage Api.LoadAllTasksRequest
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

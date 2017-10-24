@@ -1,6 +1,6 @@
 module View exposing (..)
 
-
+import Api exposing (..)
 import Model exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -9,14 +9,22 @@ import Html.Attributes exposing (..)
 view : Model -> Html Msg
 view model =
     div [ style flexContainer ]
-        [ leftNav model
+        [ leftSidebar model
         , rightContent model ]
 
 
-leftNav : Model -> Html Msg
-leftNav model =
+leftSidebar : Model -> Html Msg
+leftSidebar model =
     div [ style sidebar ]
-        [ ]
+        [ ul [] (List.map sidebarTask model.allTasks) ]
+
+
+sidebarTask : Api.Task -> Html Msg
+sidebarTask task =
+    div []
+        [ (text task.name)
+        , (text task.description) ]
+
 
 rightContent : Model -> Html Msg
 rightContent model =

@@ -18,4 +18,8 @@ renderSubscriber = do
   collectDeclaration . return $
     "listen : String -> Decoder a -> (Result String a -> msg) -> Sub msg" <$$>
     "listen host decoder tagger = " <$$>
-    "    WebSocket.listen (\"ws://\" ++ host) (\\str -> decodeString decoder str |> tagger)"
+    "    WebSocket.listen (\"ws://\" ++ host) (\\str -> decodeString decoder str |> tagger)" <$$>
+    emptyline <$$>
+    "send : String -> (a -> Json.Encode.Value) -> a -> Cmd msg" <$$>
+    "send host encoder value =" <$$>
+    "    WebSocket.send (\"ws://\" ++ host) (Json.Encode.encode 0 (encoder value))"
