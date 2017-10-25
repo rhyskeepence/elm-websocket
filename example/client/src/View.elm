@@ -4,52 +4,42 @@ import Api exposing (..)
 import Model exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-
+import Styles
 
 view : Model -> Html Msg
 view model =
-    div [ style flexContainer ]
+    div [ style Styles.flexContainer ]
         [ leftSidebar model
         , rightContent model ]
 
 
 leftSidebar : Model -> Html Msg
 leftSidebar model =
-    div [ style sidebar ]
-        [ ul [] (List.map sidebarTask model.allTasks) ]
+    div [ style Styles.sidebar ]
+        [ ul [] (sidebarMenu :: (List.map sidebarTask model.allTasks)) ]
 
+
+sidebarMenu : Html Msg
+sidebarMenu =
+    li [ style Styles.sidebarTask ]
+       [ text "+" ]
 
 sidebarTask : Api.Task -> Html Msg
 sidebarTask task =
-    div []
-        [ (text task.name)
-        , (text task.description) ]
+    li [ style Styles.sidebarTask ]
+       [ div [ style Styles.taskId ] [ (text (toString task.id)) ]
+       , div [ style Styles.taskName ] [ (text task.name) ]
+       , div [ style Styles.taskStatus ] [ (text (displayStatus task.status)) ] ]
 
+
+displayStatus : Api.TaskStatus -> String
+displayStatus status =
+    case status of
+        Ready -> "Ready"
+        InPlay -> "In Play"
+        Done -> "Done"
 
 rightContent : Model -> Html Msg
 rightContent model =
-    div [ style content ]
+    div [ style Styles.content ]
         [ ]
-
-
-flexContainer : List (String, String)
-flexContainer =
-    [ ("display", "flex")
-    , ("width", "100%")
-    ]
-
-sidebar : List (String, String)
-sidebar =
-    [ ("width", "20rem")
-    , ("height", "100%")
-    , ("color", "#ffffff")
-    , ("background-color", "#546e7a")
-    , ("border-right", "1px solid #29434e")
-    ]
-
-content : List (String, String)
-content =
-    [ ("flex", "1")
-    , ("height", "100%")
-    , ("background-color", "#b0bec5")
-    ]
