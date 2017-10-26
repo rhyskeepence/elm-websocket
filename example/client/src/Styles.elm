@@ -21,14 +21,35 @@ sidebarTask =
     , ("display", "flex")
     , ("border-bottom", "1px solid #29434e") ]
 
+sidebarMenu : List (String, String)
+sidebarMenu =
+    [ ("padding", "2rem 1rem")
+    , ("display", "flex")
+    , ("justify-content", "center")
+    , ("align-items", "center")
+    , ("border-bottom", "1px solid #29434e") ]
+
+addButton : List (String, String)
+addButton =
+    [ ("border-radius", "100%")
+    , ("width", "2rem")
+    , ("height", "2rem")
+    , ("display", "flex")
+    , ("justify-content", "center")
+    , ("align-items", "center")
+    , ("background-color", "#ffffff")
+    , ("color", "#546e7a")
+    , ("font-weight", "900")
+    , ("cursor", "pointer")
+    ]
+
 taskId : List (String, String)
 taskId =
     [ ("margin-right", "1rem") ]
 
 taskName : List (String, String)
 taskName =
-    [ ("font-weight", "600")
-    , ("flex", "1") ]
+    [ ("flex", "1") ]
 
 taskStatus : List (String, String)
 taskStatus =
@@ -38,7 +59,8 @@ taskStatus =
 tag : List (String, String)
 tag =
     [ ("border-radius", "1rem")
-    , ("background", "rgba(255, 255, 255, .3)")
+    , ("border", "1px solid rgba(255, 255, 255, .5)")
+    , ("font-weight", "100")
     , ("padding", "0 5px") ]
 
 

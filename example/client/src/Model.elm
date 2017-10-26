@@ -7,7 +7,9 @@ import Navigation
 
 type alias Model =
     { host : String
-    , allTasks : List Api.Task }
+    , allTasks : List Api.Task
+    , hoveredTask : Maybe Api.Task
+    , visibleTask : Maybe Api.Task }
 
 
 type Msg
