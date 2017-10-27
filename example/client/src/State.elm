@@ -11,7 +11,7 @@ init location =
 
 
 initialModel : Navigation.Location -> Model
-initialModel location = Model location.host [] Nothing
+initialModel location = Model location.host [] Initial
 
 
 initialCommand : Navigation.Location -> Cmd Msg

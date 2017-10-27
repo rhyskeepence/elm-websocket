@@ -4,11 +4,19 @@ module Model exposing (..)
 import Api
 import Navigation
 
+type alias NewTaskForm =
+    { taskName : String
+    , taskDescription : String }
+
+type Page
+    = Initial
+    | CreateTask NewTaskForm
+    | ViewTask Api.Task
 
 type alias Model =
     { host : String
     , allTasks : List Api.Task
-    , visibleTask : Maybe Api.Task }
+    , page : Page }
 
 
 type Msg
