@@ -4,33 +4,32 @@ import Api exposing (..)
 import Model exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Styles
 
 view : Model -> Html Msg
 view model =
-    div [ style Styles.flexContainer ]
+    div [ class "flex-container" ]
         [ leftSidebar model
         , rightContent model ]
 
 
 leftSidebar : Model -> Html Msg
 leftSidebar model =
-    div [ style Styles.sidebar ]
+    div [ class "sidebar" ]
         [ ul [] (sidebarMenu :: (List.map sidebarTask model.allTasks)) ]
 
 
 sidebarMenu : Html Msg
 sidebarMenu =
-    li [ style Styles.sidebarMenu ]
-       [ div [ style Styles.addButton ] [ text "+" ] ]
+    li [ class "sidebar-menu" ]
+       [ div [ class "add-button" ] [ text "+" ] ]
 
 
 sidebarTask : Api.Task -> Html Msg
 sidebarTask task =
-    li [ style Styles.sidebarTask ]
-       [ div [ style Styles.taskId ] [ (text (toString task.id)) ]
-       , div [ style Styles.taskName ] [ (text task.name) ]
-       , div [ style Styles.taskStatus ] [ (text (displayStatus task.status)) ] ]
+    li [ class "sidebar-task" ]
+       [ div [ class "task-id" ] [ (text (toString task.id)) ]
+       , div [ class "task-name" ] [ (text task.name) ]
+       , div [ class "task-status" ] [ (text (displayStatus task.status)) ] ]
 
 
 displayStatus : Api.TaskStatus -> String
@@ -42,5 +41,5 @@ displayStatus status =
 
 rightContent : Model -> Html Msg
 rightContent model =
-    div [ style Styles.content ]
+    div [ class "content" ]
         [ ]

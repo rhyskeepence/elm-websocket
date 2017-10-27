@@ -1,0 +1,103 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font-family: sans-serif;
+    vertical-align: baseline;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 20rem;
+    height: 100%;
+    color: #ffffff;
+    background-color: #546e7a;
+    border-right: 1px solid #29434e;
+}
+
+.sidebar-task {
+    padding: 2rem 1rem;
+    display: flex;
+    border-bottom: 1px solid #29434e;
+    transition: background-color 100ms linear;
+}
+
+.sidebar-task:hover {
+    background-color: #29434e;
+    cursor: pointer;
+}
+
+.sidebar-menu {
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #29434e;
+}
+
+.add-button {
+    border-radius: 100%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    color: #546e7a;
+    font-weight: 900;
+    cursor: pointer;
+    transition: background-color 100ms linear;
+}
+
+.add-button:hover {
+    background-color: #fafafa;
+    color: #29434e;
+}
+
+.task-id {
+    margin-right: 1rem;
+}
+
+.task-name {
+    flex: 1;
+}
+
+.tag {
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, .5);
+    font-weight: 100;
+    padding: 0 5px;
+}
+
+.content {
+    flex: 1;
+    height: 100%;
+    background-color: #b0bec5;
+}
