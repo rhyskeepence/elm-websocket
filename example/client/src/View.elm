@@ -21,7 +21,7 @@ leftSidebar model =
 sidebarMenu : Html Msg
 sidebarMenu =
     li [ class "sidebar-menu" ]
-       [ div [ class "add-button" ] [ text "+" ] ]
+       [ button [ class "add-button" ] [ text "+ Add" ] ]
 
 
 sidebarTask : Api.Task -> Html Msg

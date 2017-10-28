@@ -62,10 +62,11 @@ table {
     border-bottom: 1px solid #29434e;
 }
 
-.add-button {
-    border-radius: 100%;
-    width: 2rem;
-    height: 2rem;
+button {
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    font-size: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,10 +74,11 @@ table {
     color: #546e7a;
     font-weight: 900;
     cursor: pointer;
+    box-shadow: 0 5px 3px rgba(0, 0, 0, 0.3);
     transition: background-color 100ms linear;
 }
 
-.add-button:hover {
+button:hover {
     background-color: #fafafa;
     color: #29434e;
 }
@@ -89,7 +91,7 @@ table {
     flex: 1;
 }
 
-.tag {
+.task-status {
     border-radius: 1rem;
     border: 1px solid rgba(255, 255, 255, .5);
     font-weight: 100;
