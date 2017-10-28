@@ -3,18 +3,17 @@ module Model exposing (..)
 
 import Api
 import Navigation
+import Page.CreateTaskPage as CreateTaskPage
 
-type alias NewTaskForm =
-    { taskName : String
-    , taskDescription : String }
 
 type Page
     = Initial
-    | CreateTask NewTaskForm
+    | CreateTask CreateTaskPage.Model
     | ViewTask Api.Task
 
+
 type alias Model =
-    { host : String
+    { location : Navigation.Location
     , allTasks : List Api.Task
     , page : Page }
 
@@ -22,3 +21,5 @@ type alias Model =
 type Msg
     = Receive (Result String Api.Message)
     | UrlChange Navigation.Location
+    | ViewCreateTask
+    | CreateTaskMsg CreateTaskPage.Msg

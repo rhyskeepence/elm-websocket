@@ -74,13 +74,13 @@ button {
     color: #546e7a;
     font-weight: 900;
     cursor: pointer;
-    box-shadow: 0 5px 3px rgba(0, 0, 0, 0.3);
     transition: background-color 100ms linear;
 }
 
 button:hover {
     background-color: #fafafa;
     color: #29434e;
+    box-shadow: 0 5px 3px rgba(0, 0, 0, 0.3);
 }
 
 .task-id {

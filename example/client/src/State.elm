@@ -3,6 +3,7 @@ module State exposing (..)
 import Api
 import Model exposing (..)
 import Navigation
+import Page.CreateTaskPage as CreateTaskPage
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
@@ -11,7 +12,7 @@ init location =
 
 
 initialModel : Navigation.Location -> Model
-initialModel location = Model location.host [] Initial
+initialModel location = Model location [] Initial
 
 
 initialCommand : Navigation.Location -> Cmd Msg
@@ -35,5 +36,18 @@ update msg model =
                 ( model , Cmd.none )
 
         UrlChange location ->
-            ( { model | host = location.host }, Cmd.none )
+            ( { model | location = location }, Cmd.none )
+
+        ViewCreateTask ->
+            ( { model | page = (CreateTask (CreateTaskPage.newModel model.location)) }, Cmd.none)
+
+        CreateTaskMsg msg ->
+            case model.page of
+                CreateTask createTaskModel ->
+                    let
+                        ( newModel, newCmd ) = CreateTaskPage.update msg createTaskModel
+                    in
+                        ( { model | page = CreateTask newModel }, Cmd.map CreateTaskMsg newCmd )
+
+                _ -> (model, Cmd.none)
 

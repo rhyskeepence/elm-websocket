@@ -33,7 +33,7 @@ instance FromJSON Task
 
 
 data Message
-  = CreateTaskRequest Task
+  = CreateTaskRequest Text Text
   | LoadAllTasksRequest
   | LoadAllTasksResponse [Task]
   deriving (Eq, Show, Generic, ElmType)

@@ -1,13 +1,16 @@
 module View exposing (..)
 
+
 import Api exposing (..)
 import Model exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
+import Page.CreateTaskPage as CreateTaskPage exposing (view)
 
 view : Model -> Html Msg
 view model =
-    div [ class "flex-container" ]
+    div [ class "container" ]
         [ leftSidebar model
         , rightContent model ]
 
@@ -21,7 +24,11 @@ leftSidebar model =
 sidebarMenu : Html Msg
 sidebarMenu =
     li [ class "sidebar-menu" ]
-       [ button [ class "add-button" ] [ text "+ Add" ] ]
+       [ button
+             [ class "add-button"
+             , onClick ViewCreateTask
+             ]
+             [ text "+ Add" ] ]
 
 
 sidebarTask : Api.Task -> Html Msg
@@ -41,5 +48,10 @@ displayStatus status =
 
 rightContent : Model -> Html Msg
 rightContent model =
-    div [ class "content" ]
-        [ ]
+    let
+        body = case model.page of
+            Initial -> []
+            CreateTask createTaskModel -> [ CreateTaskPage.view createTaskModel |> Html.map CreateTaskMsg ]
+            ViewTask _ -> []
+    in
+        div [ class "content" ] body
