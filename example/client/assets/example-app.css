@@ -63,7 +63,7 @@ table {
 }
 
 button {
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     padding: 0.5rem;
     border: none;
     font-size: inherit;
@@ -102,4 +102,29 @@ button:hover {
     flex: 1;
     height: 100%;
     background-color: #b0bec5;
+}
+
+.editor fieldset {
+    display: flex;
+    margin: 0 2rem;
+}
+
+.editor input, textarea {
+    font-size: 1rem;
+    margin: 2rem 0;
+    padding: 0.5rem;
+    border: 2px solid #b0bec5;
+    border-bottom-color: #fafafa;
+    background-color: inherit;
+    width: 100%;
+    color: #fafafa;
+}
+
+.editor input:focus, textarea:focus {
+    border: 2px solid #fafafa;
+    outline: none;
+}
+
+.editor textarea {
+    overflow-y: hidden;
 }
