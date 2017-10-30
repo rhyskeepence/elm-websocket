@@ -2,7 +2,7 @@ module Page.CreateTaskPage exposing (..)
 
 
 import Html exposing (..)
-import Html.Attributes exposing (attribute, class, defaultValue, disabled, href, id, placeholder, rows, style, type_)
+import Html.Attributes exposing (attribute, class, defaultValue, disabled, href, id, placeholder, rows, style, type_, value)
 import Html.Events exposing (onInput, on, onSubmit)
 import Json.Decode
 import Navigation
@@ -56,7 +56,7 @@ viewForm model =
             [ input
                 [ placeholder "Task Name"
                 , onInput SetName
-                , defaultValue model.name
+                , value model.name
                 ]
                 []
             , textarea
@@ -64,7 +64,7 @@ viewForm model =
                 , style [("height", ((toString (model.descriptionHeight + 4)) ++ "px"))]
                 , onInput SetDescription
                 , onKeyUp ResizeDescription
-                , defaultValue model.description
+                , value model.description
                 ]
                 []
             , button [ class "save-button" ]
@@ -77,7 +77,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Save ->
-            (model, Api.send model.location.host Api.encodeMessage (Api.CreateTaskRequest model.name model.description))
+            ((newModel model.location), Api.send model.location.host Api.encodeMessage (Api.CreateTaskRequest model.name model.description))
 
         SetName name ->
             ({ model | name = name }, Cmd.none)
