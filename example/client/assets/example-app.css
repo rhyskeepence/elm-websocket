@@ -40,6 +40,7 @@ table {
     color: #ffffff;
     background-color: #546e7a;
     border-right: 1px solid #29434e;
+    overflow-y: auto;
 }
 
 .sidebar-task {
