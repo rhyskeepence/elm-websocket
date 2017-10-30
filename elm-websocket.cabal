@@ -25,6 +25,7 @@ library
                      , formatting
                      , lens
                      , mtl
+                     , stm
                      , text
                      , time
                      , wai
