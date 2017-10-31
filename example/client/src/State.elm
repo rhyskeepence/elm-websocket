@@ -1,6 +1,6 @@
 module State exposing (..)
 
-import Api
+import Api exposing (..)
 import Model exposing (..)
 import Navigation
 import Page.CreateTaskPage as CreateTaskPage
@@ -16,18 +16,14 @@ initialModel location = Model location [] Initial
 
 
 initialCommand : Navigation.Location -> Cmd Msg
-initialCommand location = Api.send location.host Api.encodeMessage Api.LoadAllTasksRequest
+initialCommand location = Api.send location.host Api.encodeRequest Api.LoadAllTasksRequest
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Receive (Ok (Api.LoadAllTasksResponse tasks)) ->
-            ( { model | allTasks = tasks }, Cmd.none )
-
-        Receive (Ok _) ->
-            -- Remove this by splitting Request and Response types
-            ( model, Cmd.none )
+        Receive (Ok response) ->
+            ( { model | allTasks = response.tasks }, Cmd.none )
 
         Receive (Err error) ->
             let

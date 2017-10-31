@@ -11,13 +11,14 @@ spec =
   moduleSpec ["Api"] $ do
     renderType (Proxy :: Proxy TaskStatus)
     renderType (Proxy :: Proxy Task)
-    renderType (Proxy :: Proxy Message)
+    renderType (Proxy :: Proxy Request)
+    renderType (Proxy :: Proxy Response)
     renderEncoder (Proxy :: Proxy TaskStatus)
     renderEncoder (Proxy :: Proxy Task)
-    renderEncoder (Proxy :: Proxy Message)
+    renderEncoder (Proxy :: Proxy Request)
     renderDecoder (Proxy :: Proxy TaskStatus)
     renderDecoder (Proxy :: Proxy Task)
-    renderDecoder (Proxy :: Proxy Message)
+    renderDecoder (Proxy :: Proxy Response)
     renderSubscriber
 
 main :: IO ()

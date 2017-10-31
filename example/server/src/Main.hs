@@ -16,18 +16,17 @@ main = do
   httpApplication <- scottyApp httpEndpoints
   Warp.run 8080 $ WS.withWebSocketBroadcaster broadcaster (webSocketService tasks broadcaster) httpApplication
 
-webSocketService :: MVar [Task] -> Broadcaster -> WebSocketServer Message Message
+webSocketService :: MVar [Task] -> Broadcaster -> WebSocketServer Request Response
 webSocketService tasks broadcaster request =
   case request of
     CreateTaskRequest name description -> do
       MVar.modifyMVar_ tasks (\allTasks -> return $ allTasks ++ [Task 1 name description Ready])
       newTasks <- MVar.readMVar tasks
-      WS.broadcast broadcaster $ LoadAllTasksResponse newTasks
+      WS.broadcast broadcaster $ Response newTasks
       return Nothing
     LoadAllTasksRequest -> do
       newTasks <- MVar.readMVar tasks
-      return $ Just $ LoadAllTasksResponse newTasks
-    LoadAllTasksResponse _ -> return Nothing
+      return $ Just $ Response newTasks
 
 httpEndpoints :: ScottyM ()
 httpEndpoints = do

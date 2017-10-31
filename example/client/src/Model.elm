@@ -19,7 +19,7 @@ type alias Model =
 
 
 type Msg
-    = Receive (Result String Api.Message)
+    = Receive (Result String Api.Response)
     | UrlChange Navigation.Location
     | ShowCreateTask
     | ShowViewTask Api.Task

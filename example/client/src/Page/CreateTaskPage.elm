@@ -77,7 +77,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Save ->
-            ((newModel model.location), Api.send model.location.host Api.encodeMessage (Api.CreateTaskRequest model.name model.description))
+            ((newModel model.location), Api.send model.location.host Api.encodeRequest (Api.CreateTaskRequest model.name model.description))
 
         SetName name ->
             ({ model | name = name }, Cmd.none)

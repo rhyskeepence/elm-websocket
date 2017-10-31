@@ -32,13 +32,16 @@ instance ToJSON Task
 instance FromJSON Task
 
 
-data Message
+data Request
   = CreateTaskRequest Text Text
   | LoadAllTasksRequest
-  | LoadAllTasksResponse [Task]
   deriving (Eq, Show, Generic, ElmType)
 
+instance FromJSON Request
 
-instance ToJSON Message
+newtype Response
+  = Response
+  { tasks :: [Task]
+  } deriving (Eq, Show, Generic, ElmType)
 
-instance FromJSON Message
+instance ToJSON Response

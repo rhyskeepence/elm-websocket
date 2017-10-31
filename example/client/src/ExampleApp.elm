@@ -17,4 +17,4 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Api.listen model.location.host Api.decodeMessage Receive
+    Api.listen model.location.host Api.decodeResponse Receive
