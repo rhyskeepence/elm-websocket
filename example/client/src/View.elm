@@ -7,6 +7,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Page.CreateTaskPage as CreateTaskPage exposing (view)
+import Page.ViewTaskPage as ViewTaskPage exposing (view, displayStatus)
 
 view : Model -> Html Msg
 view model =
@@ -26,25 +27,18 @@ sidebarMenu =
     li [ class "sidebar-menu" ]
        [ button
              [ class "add-button"
-             , onClick ViewCreateTask
+             , onClick ShowCreateTask
              ]
              [ text "+ Add" ] ]
 
 
 sidebarTask : Api.Task -> Html Msg
 sidebarTask task =
-    li [ class "sidebar-task" ]
+    li [ class "sidebar-task"
+       , onClick (ShowViewTask task) ]
        [ div [ class "task-id" ] [ (text (toString task.id)) ]
        , div [ class "task-name" ] [ (text task.name) ]
        , div [ class "task-status" ] [ (text (displayStatus task.status)) ] ]
-
-
-displayStatus : Api.TaskStatus -> String
-displayStatus status =
-    case status of
-        Ready -> "Ready"
-        InPlay -> "In Play"
-        Done -> "Done"
 
 rightContent : Model -> Html Msg
 rightContent model =
@@ -52,6 +46,6 @@ rightContent model =
         body = case model.page of
             Initial -> []
             CreateTask createTaskModel -> [ CreateTaskPage.view createTaskModel |> Html.map CreateTaskMsg ]
-            ViewTask _ -> []
+            ViewTask task -> [ ViewTaskPage.view task ]
     in
         div [ class "content" ] body

@@ -21,5 +21,6 @@ type alias Model =
 type Msg
     = Receive (Result String Api.Message)
     | UrlChange Navigation.Location
-    | ViewCreateTask
+    | ShowCreateTask
+    | ShowViewTask Api.Task
     | CreateTaskMsg CreateTaskPage.Msg

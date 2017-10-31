@@ -38,8 +38,11 @@ update msg model =
         UrlChange location ->
             ( { model | location = location }, Cmd.none )
 
-        ViewCreateTask ->
+        ShowCreateTask ->
             ( { model | page = (CreateTask (CreateTaskPage.newModel model.location)) }, Cmd.none)
+
+        ShowViewTask task ->
+            ( { model | page = (ViewTask task) }, Cmd.none)
 
         CreateTaskMsg msg ->
             case model.page of
