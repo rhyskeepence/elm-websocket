@@ -8,15 +8,14 @@ import Html.Events exposing (onInput, on, onSubmit)
 
 view : Task -> Html Msg
 view task =
-    div []
-        [ div
+    div [ class "viewer" ]
+        [ header
             []
-            [ text task.name ]
+            [ div [ class "task-name" ] [text task.name]
+            , div [ class "task-status" ] [ text (displayStatus task.status) ]
+            ]
         , div
-            []
-            [ text (displayStatus task.status) ]
-        , div
-            []
+            [ class "task-description" ]
             [ text task.description ]
         ]
 
