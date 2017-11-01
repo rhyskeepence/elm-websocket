@@ -1,5 +1,5 @@
 name:                elm-websocket
-version:             0.1
+version:             1.0
 synopsis:            Generate ELM code from a Wai websocket application.
 description:         Please see README.md
 homepage:            http://github.com/rhyskeepence/elm-websocket
