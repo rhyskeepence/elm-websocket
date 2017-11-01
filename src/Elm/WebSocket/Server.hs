@@ -48,12 +48,27 @@ forkBroadcastThread connection incomingBroadcasts = do
         WS.sendTextData connection message
   return ()
 
+{-|
+  Return a Wai.Application, which hosts both a WebSocket application, defined by the WebSocketServer,
+  along with a non-websocket Wai.Application.
+
+  This function also requires a Broadcaster, which is used to broadcast WebSocket messages to connected clients.
+
+  The WebSocket application uses JSON as a wire format, so must have a FromJSON instance defined for the Request type,
+  and a ToJSON instance defined for the Response type.
+-}
 withWebSocketBroadcaster :: FromJSON a => ToJSON b => Broadcaster -> WebSocketServer a b -> Wai.Application -> Wai.Application
 withWebSocketBroadcaster connectedClients server =
   WS.websocketsOr WS.defaultConnectionOptions $ webSocketApp connectedClients server
 
+{-|
+  Create a Broadcaster, used to send messages to all connected clients.
+-}
 newBroadcaster :: IO Broadcaster
 newBroadcaster = newBroadcastTChanIO
 
+{-|
+  Broadcast a message to all connected clients.
+-}
 broadcast :: ToJSON a => Broadcaster -> a -> IO ()
 broadcast broadcaster message = atomically $ writeTChan broadcaster $ encode message

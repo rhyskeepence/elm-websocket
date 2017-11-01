@@ -14,7 +14,9 @@ main = do
   tasks <- MVar.newMVar []
   broadcaster <- WS.newBroadcaster
   httpApplication <- scottyApp httpEndpoints
-  Warp.run 8080 $ WS.withWebSocketBroadcaster broadcaster (webSocketService tasks broadcaster) httpApplication
+
+  let webSocketApp = webSocketService tasks broadcaster
+  Warp.run 8080 $ WS.withWebSocketBroadcaster broadcaster webSocketApp httpApplication
 
 webSocketService :: MVar [Task] -> Broadcaster -> WebSocketServer Request Response
 webSocketService tasks broadcaster request =
