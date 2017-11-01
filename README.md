@@ -12,7 +12,7 @@ Available on [Hackage](https://hackage.haskell.org/package/elm-websocket-1.0) as
 
 This package broadly does two things:
  1. A library for creating a WAI WebSocket service, which can respond to requests as well as broadcast to all clients.
- 1. Generates the ELM code for data types, JSON codecs and a WebSocket subscriber
+ 2. Generates the Elm code for data types, JSON encoders/decoders and a WebSocket subscriber
 
 First let's create our API - some haskell types to model our Request and Response. We derive Generic and ElmType,  
 so that (Elm Export)[https://github.com/krisajenkins/elm-export] can do it's thing. We also 
@@ -78,11 +78,11 @@ main = do
   run 8080 $ withWebSocketBroadcaster broadcaster webSocketApp httpApplication     
 ```
 
-That's it from the server side - a server which can respond to WebSocket requests from 
-the client, as well as send broadcasts to all clients. Note that the request, response and broadcast types
-are our Haskell types - JSON marshalling is done under the covers.
+That's it from the server side. We have built a server which can respond to WebSocket requests, 
+as well as send broadcast messages to all clients. Note that the request, response and broadcast types
+are our Haskell types - JSON encoding/decoding is done under the covers.
 
-The next bit is the Elm side. This package includes a code generator for Elm types, JSON codecs, and WebSocket subscription.
+The next bit is the Elm side. This package includes a code generator for Elm types, JSON encoders/decoders, and WebSocket subscription.
 
 Create a main to generate the Elm source from our Haskell API:
 
@@ -113,13 +113,13 @@ We can then subscribe to WebSocket responses, and trigger a Msg of type `Receive
 ```elm
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Api.listen model.location.host Api.decodeResponse Receive
+    Api.listen host Api.decodeResponse Receive
 ```
 
 We can also send WebSocket requests to the server, using this Cmd:
 
 ```elm
-    Api.send model.location.host Api.encodeRequest (Api.CreateTask "name" "description")
+    Api.send host Api.encodeRequest (Api.CreateTask "name" "description")
 ```
 
 #### Elm Notes
