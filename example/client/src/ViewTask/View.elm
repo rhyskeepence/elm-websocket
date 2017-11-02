@@ -1,4 +1,4 @@
-module Page.ViewTaskPage exposing (..)
+module ViewTask.View exposing (..)
 
 import Api exposing (..)
 import Model exposing (..)
@@ -6,8 +6,8 @@ import Html exposing (..)
 import Html.Attributes exposing (attribute, class, defaultValue, disabled, href, id, placeholder, rows, style, type_, value)
 import Html.Events exposing (onInput, on, onSubmit)
 
-view : Task -> Html Msg
-view task =
+viewTask : Task -> Html Msg
+viewTask task =
     div [ class "viewer" ]
         [ header
             []

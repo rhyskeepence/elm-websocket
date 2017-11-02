@@ -3,12 +3,12 @@ module Model exposing (..)
 
 import Api
 import Navigation
-import Page.CreateTaskPage as CreateTaskPage
+import CreateTask.Model as CreateTaskModel
 
 
 type Page
     = Initial
-    | CreateTask CreateTaskPage.Model
+    | CreateTask CreateTaskModel.CreateTaskForm
     | ViewTask Api.Task
 
 
@@ -23,4 +23,4 @@ type Msg
     | UrlChange Navigation.Location
     | ShowCreateTask
     | ShowViewTask Api.Task
-    | CreateTaskMsg CreateTaskPage.Msg
+    | CreateTaskMsg CreateTaskModel.CreateTaskMsg

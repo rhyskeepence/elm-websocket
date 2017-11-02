@@ -6,8 +6,8 @@ import Model exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
-import Page.CreateTaskPage as CreateTaskPage exposing (view)
-import Page.ViewTaskPage as ViewTaskPage exposing (view, displayStatus)
+import CreateTask.View exposing (viewCreateTask)
+import ViewTask.View exposing (viewTask, displayStatus)
 
 view : Model -> Html Msg
 view model =
@@ -45,7 +45,7 @@ rightContent model =
     let
         body = case model.page of
             Initial -> []
-            CreateTask createTaskModel -> [ CreateTaskPage.view createTaskModel |> Html.map CreateTaskMsg ]
-            ViewTask task -> [ ViewTaskPage.view task ]
+            CreateTask form -> [ viewCreateTask form ]
+            ViewTask task -> [ viewTask task ]
     in
         div [ class "content" ] body

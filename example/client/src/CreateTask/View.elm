@@ -1,4 +1,4 @@
-module Page.CreateTaskPage exposing (..)
+module CreateTask.View exposing (viewCreateTask)
 
 
 import Html exposing (..)
@@ -7,34 +7,12 @@ import Html.Events exposing (onInput, on, onSubmit)
 import Json.Decode
 import Navigation
 import Api
+import Model as Model
+import CreateTask.Model exposing (..)
 
 
-type alias Model =
-    { location : Navigation.Location
-    , errors : List String
-    , name : String
-    , description : String
-    , descriptionHeight : Int
-    }
-
-
-baseHeight : Int
-baseHeight = 32
-
-
-newModel : Navigation.Location -> Model
-newModel navigation = Model navigation [] "" "" baseHeight
-
-
-type Msg
-    = Save
-    | SetName String
-    | SetDescription String
-    | ResizeDescription Int
-
-
-view : Model -> Html Msg
-view model =
+viewCreateTask : CreateTaskForm -> Html Model.Msg
+viewCreateTask model =
     div [ class "editor" ]
         [ div [ class "col-md-10 offset-md-1 col-xs-12" ]
             [ ul [] (List.map viewError model.errors)
@@ -43,27 +21,27 @@ view model =
         ]
 
 
-viewError : String -> Html Msg
+viewError : String -> Html Model.Msg
 viewError error =
     li [ class "error-message" ] [ text error ]
 
 
-viewForm : Model -> Html Msg
+viewForm : CreateTaskForm -> Html Model.Msg
 viewForm model =
     Html.form
-        [ onSubmit Save ]
+        [ onSubmit (Model.CreateTaskMsg Save) ]
         [ fieldset []
             [ input
                 [ placeholder "Task Name"
-                , onInput SetName
+                , onInput (Model.CreateTaskMsg << SetName)
                 , value model.name
                 ]
                 []
             , textarea
                 [ placeholder "What's this task about?"
                 , style [("height", ((toString (model.descriptionHeight + 4)) ++ "px"))]
-                , onInput SetDescription
-                , onKeyUp ResizeDescription
+                , onInput (Model.CreateTaskMsg << SetDescription)
+                , onKeyUp (Model.CreateTaskMsg << ResizeDescription)
                 , value model.description
                 ]
                 []
@@ -72,21 +50,6 @@ viewForm model =
             ]
         ]
 
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        Save ->
-            ((newModel model.location), Api.send model.location.host Api.encodeRequest (Api.CreateTaskRequest model.name model.description))
-
-        SetName name ->
-            ({ model | name = name }, Cmd.none)
-
-        SetDescription description ->
-            ({ model | description = description }, Cmd.none)
-
-        ResizeDescription height ->
-            ({ model | descriptionHeight = height }, Cmd.none)
 
 onKeyUp : (Int -> msg) -> Html.Attribute msg
 onKeyUp tagger =

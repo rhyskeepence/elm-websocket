@@ -3,7 +3,8 @@ module State exposing (..)
 import Api exposing (..)
 import Model exposing (..)
 import Navigation
-import Page.CreateTaskPage as CreateTaskPage
+import CreateTask.Model exposing (resetCreateTaskForm)
+import CreateTask.State exposing (updateCreateTaskForm)
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
@@ -35,18 +36,13 @@ update msg model =
             ( { model | location = location }, Cmd.none )
 
         ShowCreateTask ->
-            ( { model | page = (CreateTask (CreateTaskPage.newModel model.location)) }, Cmd.none)
+            ( { model | page = (CreateTask resetCreateTaskForm) }, Cmd.none)
 
         ShowViewTask task ->
             ( { model | page = (ViewTask task) }, Cmd.none)
 
-        CreateTaskMsg msg ->
+        CreateTaskMsg createTaskMsg ->
             case model.page of
-                CreateTask createTaskModel ->
-                    let
-                        ( newModel, newCmd ) = CreateTaskPage.update msg createTaskModel
-                    in
-                        ( { model | page = CreateTask newModel }, Cmd.map CreateTaskMsg newCmd )
-
+                CreateTask form -> updateCreateTaskForm createTaskMsg form model
                 _ -> (model, Cmd.none)
 
