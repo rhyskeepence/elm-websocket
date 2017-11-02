@@ -2,7 +2,7 @@
 
 Generate an Elm Subscriber and JSON encoders/decoders for a Wai WebSocket server.
 
-Elm encode/decode is generated thanks to [krisajenkins/elm-export](https://github.com/krisajenkins/elm-export), with ADT generation thanks to (https://github.com/FPtje).
+Elm encode/decode is generated thanks to [krisajenkins/elm-export](https://github.com/krisajenkins/elm-export), with ADT generation thanks to [FPtje](https://github.com/FPtje).
 
 ## Installation
 
@@ -150,11 +150,15 @@ Furthermore, the Elm boilerplate can be reduced if the REST API uses the generat
 An example 'Task Management' application is included in this repository under the example directory. It can be built and run using the following command
 
 ```
+$ make setup
 $ make run-example
 ```
 
 This will build the haskell application, as well as the Elm client, and serve it at [localhost:8080](http://localhost:8080).
 
+Note: the run-example makefile depends on stack, elm-make, forever (node.js), chokidar (node.js) and browser-sync (node.js)
+ 
+You can also run `make browser-sync` to bring up the app, and reload when changes are made. 
 
 ## Development
 
