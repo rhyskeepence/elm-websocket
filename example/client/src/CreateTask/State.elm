@@ -9,7 +9,7 @@ updateCreateTaskForm : CreateTaskMsg -> CreateTaskForm -> Model -> ( Model, Cmd 
 updateCreateTaskForm msg form model =
     case msg of
         Save ->
-            ({ model | page = Initial}, Api.send model.location.host Api.encodeRequest (Api.CreateTaskRequest form.name form.description))
+            ({ model | page = Initial}, Api.send model.location.host (Api.CreateTaskRequest form.name form.description))
 
         SetName name ->
             let newForm = { form | name = name }

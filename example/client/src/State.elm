@@ -17,7 +17,7 @@ initialModel location = Model location [] Initial
 
 
 initialCommand : Navigation.Location -> Cmd Msg
-initialCommand location = Api.send location.host Api.encodeRequest Api.LoadAllTasksRequest
+initialCommand location = Api.send location.host Api.LoadAllTasksRequest
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

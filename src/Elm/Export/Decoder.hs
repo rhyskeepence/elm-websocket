@@ -9,6 +9,7 @@ module Elm.Export.Decoder
   , toElmDecoderSource
   , toElmDecoderSourceWith
   , renderDecoder
+  , renderDecoderName
   ) where
 
 import Control.Monad.RWS
@@ -168,3 +169,8 @@ renderDecoder x = do
   require "Json.Decode exposing (..)"
   require "Json.Decode.Pipeline exposing (..)"
   collectDeclaration . render . toElmType $ x
+
+renderDecoderName
+  :: ElmType a
+  => a -> RenderM Doc
+renderDecoderName requestType = renderRef (toElmType requestType)

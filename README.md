@@ -11,11 +11,11 @@ Available on [Hackage](https://hackage.haskell.org/package/elm-websocket-1.0) as
 ## Usage
 
 This package broadly does two things:
- 1. A library for creating a WAI WebSocket service, which can respond to requests as well as broadcast to all clients.
+ 1. A library for creating a Wai WebSocket service, which can respond to requests as well as broadcast to all clients.
  2. Generates the Elm code for data types, JSON encoders/decoders and a WebSocket subscriber
 
 First let's create our API - some haskell types to model our Request and Response. We derive Generic and ElmType,  
-so that (Elm Export)[https://github.com/krisajenkins/elm-export] can do it's thing. We also 
+so that [Elm Export](https://github.com/krisajenkins/elm-export) can do it's thing. We also 
 need a FromJSON instance for the Request, and ToJSON instance for the Response.
 
 ```haskell
@@ -63,7 +63,7 @@ webSocketService broadcaster request =
       return $ Just $ AllTasksResponse tasks
 ```
 
-Next, create a server. In this example, `httpApplication` can be any IO Wai.Application.
+Next, create a server. In this example, `httpApplication` can be any IO Wai.Application, for example a [Scotty](https://hackage.haskell.org/package/scotty) or [Servant](https://hackage.haskell.org/package/servant) application.
 
 ```haskell
 import Api 
@@ -106,33 +106,44 @@ main :: IO ()
 main = specsToDir [spec] "client/src"
 ```
 
+Note that `renderSubscriber` takes the `Request` and `Response` type - this is so that the generated `listen` and `send` functions
+expect the correct types, and the compiler not allow any other type to be sent or received.
+
 Run this, and `client/src/Api.elm` will be created.
 
-We can then subscribe to WebSocket responses, and trigger a Msg of type `Receive (Result String Api.Response)`:
+We can then subscribe to WebSocket responses, and trigger a Msg of type `Receive (Result String Response)`:
 
 ```elm
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Api.listen host Api.decodeResponse Receive
+subscriptions : Sub Msg
+subscriptions =
+    Api.listen "hostname:port" Receive
 ```
 
 We can also send WebSocket requests to the server, using this Cmd:
 
 ```elm
-    Api.send host Api.encodeRequest (Api.CreateTask "name" "description")
+    Api.send "hostname:port" (Api.CreateTask "name" "description")
 ```
 
 #### Elm Notes
 
- 1. The above example assumes that the generated decoder is named `decodeResponse`, and the generated encoder is named `encodeResponse` - these
-names are automatically derived from the Haskell Resquest/Response type. 
- 2. The listen and send functions require the hostname of the server. This can be taken from the browser location and stored in the model, by using the `elm-lang/navigation` package. 
- 3. The generated Elm code requires the following packages:
+ 1. The listen and send functions require the hostname of the server. This can be taken from the browser location and stored in the model, by using the `elm-lang/navigation` package. 
+ 2. The generated Elm code requires the following packages:
    ```
    elm package install elm-lang/websocket
    elm package install NoRedInk/elm-decode-pipeline
    elm package install krisajenkins/elm-exts
    ```
+
+## Application design notes
+
+The example application makes all requests and responses over WebSockets. From a performance standpoint
+this design can be good, as the connection remains open so HTTP negotiation is minimised. However, it requires that
+clients of your API use WebSockets, which may not be ideal. It also makes it difficult to perform ad-hoc requests using cURL/Postman/etc,
+and viewing network activity is not as simple compared to a traditional REST API.
+
+It is possible to use this library to write a system that uses REST to make Requests, and still broadcast events in HTTP request handlers, i.e., `liftIO $ broadcast ...`. 
+Furthermore, the Elm boilerplate can be reduced if the REST API uses the generated Request and Response types.
 
 ## Example application
 

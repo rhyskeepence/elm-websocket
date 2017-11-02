@@ -19,7 +19,7 @@ spec =
     renderDecoder (Proxy :: Proxy TaskStatus)
     renderDecoder (Proxy :: Proxy Task)
     renderDecoder (Proxy :: Proxy Response)
-    renderSubscriber
+    renderSubscriber (Proxy :: Proxy Request) (Proxy :: Proxy Response)
 
 main :: IO ()
 main = specsToDir [spec] "client/src"

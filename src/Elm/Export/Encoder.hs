@@ -6,6 +6,7 @@ module Elm.Export.Encoder
   , toElmEncoderSource
   , toElmEncoderSourceWith
   , renderEncoder
+  , renderEncoderName
   ) where
 
 import Control.Monad.RWS
@@ -212,3 +213,8 @@ renderVariable ds f@(ElmField _ _) = do
   f' <- render f
   return (f', ds)
 renderVariable [] _ = error "Amount of variables does not match variables"
+
+renderEncoderName
+  :: ElmType a
+  => a -> RenderM Doc
+renderEncoderName encoderType = renderRef (toElmType encoderType)
