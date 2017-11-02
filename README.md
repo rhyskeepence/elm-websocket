@@ -100,7 +100,7 @@ spec =
     renderType (Proxy :: Proxy Response)
     renderEncoder (Proxy :: Proxy Request)
     renderDecoder (Proxy :: Proxy Response)
-    renderSubscriber
+    renderSubscriber (Proxy :: Proxy Request) (Proxy :: Proxy Response)
 
 main :: IO ()
 main = specsToDir [spec] "client/src"
